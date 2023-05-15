@@ -9,6 +9,7 @@ import (
 	"github.com/jeremydelacruz/go-bookings/pkg/handlers"
 )
 
+// TODO: try replacing chi? (fiber? gin? other alternative?)
 func routes(app *config.AppConfig) http.Handler {
 	mux := chi.NewRouter()
 

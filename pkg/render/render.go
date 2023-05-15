@@ -7,8 +7,8 @@ import (
 	"path/filepath"
 	"text/template"
 
-	"github.com/jeremydelacruz/bookings/pkg/config"
-	"github.com/jeremydelacruz/bookings/pkg/models"
+	"github.com/jeremydelacruz/go-bookings/pkg/config"
+	"github.com/jeremydelacruz/go-bookings/pkg/models"
 )
 
 var app *config.AppConfig

@@ -3,9 +3,9 @@ package handlers
 import (
 	"net/http"
 
-	"github.com/jeremydelacruz/bookings/pkg/config"
-	"github.com/jeremydelacruz/bookings/pkg/models"
-	"github.com/jeremydelacruz/bookings/pkg/render"
+	"github.com/jeremydelacruz/go-bookings/pkg/config"
+	"github.com/jeremydelacruz/go-bookings/pkg/models"
+	"github.com/jeremydelacruz/go-bookings/pkg/render"
 )
 
 // Repository is the repository type

@@ -1,4 +1,4 @@
-module github.com/jeremydelacruz/bookings
+module github.com/jeremydelacruz/go-bookings
 
 go 1.20
 

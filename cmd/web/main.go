@@ -18,15 +18,8 @@ var session *scs.SessionManager
 
 // main is the main application entrypoint function
 func main() {
-	tc, err := render.CreateTemplateCache()
-	if err != nil {
-		log.Fatal("cannot create template cache")
-	}
-
 	// change this to true in prod
 	app.InProduction = false
-	app.TemplateCache = tc
-	app.UseCache = false
 
 	session = scs.New()
 	session.Lifetime = 24 * time.Hour
@@ -35,6 +28,14 @@ func main() {
 	session.Cookie.Secure = app.InProduction
 
 	app.Session = session
+
+	tc, err := render.CreateTemplateCache()
+	if err != nil {
+		log.Fatal("cannot create template cache")
+	}
+
+	app.TemplateCache = tc
+	app.UseCache = false
 
 	repo := handlers.NewRepo(&app)
 	handlers.NewHandlers(repo)
@@ -49,5 +50,7 @@ func main() {
 	}
 
 	err = srv.ListenAndServe()
-	log.Fatal(err)
+	if err != nil {
+		log.Fatal(err)
+	}
 }

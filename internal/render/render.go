@@ -7,8 +7,9 @@ import (
 	"path/filepath"
 	"text/template"
 
-	"github.com/jeremydelacruz/go-bookings/pkg/config"
-	"github.com/jeremydelacruz/go-bookings/pkg/models"
+	"github.com/jeremydelacruz/go-bookings/internal/config"
+	"github.com/jeremydelacruz/go-bookings/internal/models"
+	"github.com/justinas/nosurf"
 )
 
 var app *config.AppConfig
@@ -19,11 +20,12 @@ func NewTemplates(a *config.AppConfig) {
 }
 
 // addDefaultData adds data that should be present on every page
-func addDefaultData(data *models.TemplateData) *models.TemplateData {
+func addDefaultData(data *models.TemplateData, r *http.Request) *models.TemplateData {
+	data.CSRFToken = nosurf.Token(r)
 	return data
 }
 
-func RenderTemplate(w http.ResponseWriter, tmpl string, data *models.TemplateData) {
+func RenderTemplate(w http.ResponseWriter, r *http.Request, tmpl string, data *models.TemplateData) {
 	var templateCache map[string]*template.Template
 
 	if app.UseCache {
@@ -46,7 +48,7 @@ func RenderTemplate(w http.ResponseWriter, tmpl string, data *models.TemplateDat
 
 	// use a buffer here just as another potential point of error handling
 	buf := new(bytes.Buffer)
-	data = addDefaultData(data)
+	data = addDefaultData(data, r)
 	err := t.Execute(buf, data)
 	if err != nil {
 		log.Println(err)

@@ -58,8 +58,37 @@
         </form>
         `;
         attention.custom({
-            title: 'Choose your dates',
             msg: html,
+            title: 'Choose your dates',
+            willOpen: () => {
+                const elem = document.getElementById("reservation-dates-modal");
+                const rp = new DateRangePicker(elem, {
+                    format: 'yyyy-mm-dd',
+                    showOnFocus: true,
+                })
+            },
+            didOpen: () => {
+                document.getElementById("start").removeAttribute("disabled");
+                document.getElementById("end").removeAttribute("disabled");
+            },
+            callback: async function(result) {
+                console.log(`called with result: ${result}`);
+
+                if (!result)
+                    return;
+                
+                const form = document.getElementById("check-availability-form");
+                const formData = new FormData(form);
+                formData.append("csrf_token", "{{.CSRFToken}}");
+                
+                const res = await fetch('/search-availability-json', {
+                    method: "post",
+                    body: formData
+                });
+                const data = await res.json();
+                const { ok, message } = data;
+                console.log(`ok: ${ok}, message: ${message}`);
+            }
         });
     });
 </script>

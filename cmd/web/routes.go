@@ -5,8 +5,8 @@ import (
 
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
-	"github.com/jeremydelacruz/go-bookings/pkg/config"
-	"github.com/jeremydelacruz/go-bookings/pkg/handlers"
+	"github.com/jeremydelacruz/go-bookings/internal/config"
+	"github.com/jeremydelacruz/go-bookings/internal/handlers"
 )
 
 // TODO: try replacing chi? (fiber? gin? other alternative?)
@@ -18,7 +18,11 @@ func routes(app *config.AppConfig) http.Handler {
 	mux.Get("/", handlers.Repo.Home)
 	mux.Get("/about", handlers.Repo.About)
 	mux.Get("/generals-quarters", handlers.Repo.Generals)
+
 	mux.Get("/search-availability", handlers.Repo.Availability)
+	mux.Post("/search-availability", handlers.Repo.PostAvailability)
+	mux.Post("/search-availability-json", handlers.Repo.AvailabilityJSON)
+
 	mux.Get("/majors-suite", handlers.Repo.Majors)
 	mux.Get("/make-reservation", handlers.Repo.Reservation)
 	mux.Get("/contact", handlers.Repo.Contact)

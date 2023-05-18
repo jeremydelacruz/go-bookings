@@ -146,6 +146,18 @@
                     confirmButtonText: confirmationButtonText
                 })
             }
+
+            {{with .Flash}}
+            notify("{{.}}", "success");
+            {{end}}
+
+            {{with .Warning}}
+            notify("{{.}}", "warning");
+            {{end}}
+
+            {{with .Error}}
+            notify("{{.}}", "error");
+            {{end}}
         
             function Prompt() {
                 let toast = function (c) {

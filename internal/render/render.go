@@ -22,6 +22,9 @@ func NewTemplates(a *config.AppConfig) {
 // addDefaultData adds data that should be present on every page
 func addDefaultData(data *models.TemplateData, r *http.Request) *models.TemplateData {
 	data.CSRFToken = nosurf.Token(r)
+	data.Flash = app.Session.PopString(r.Context(), "flash")
+	data.Warning = app.Session.PopString(r.Context(), "warning")
+	data.Error = app.Session.PopString(r.Context(), "error")
 	return data
 }
 

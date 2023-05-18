@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/gob"
+	"fmt"
 	"log"
 	"net/http"
 	"time"
@@ -18,8 +19,28 @@ const portNumber = ":8080"
 var app config.AppConfig
 var session *scs.SessionManager
 
-// main is the main application entrypoint function
+// main is the application entrypoint
 func main() {
+	err := run()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	log.Printf("starting application on port %s\n", portNumber)
+
+	srv := &http.Server{
+		Addr:    portNumber,
+		Handler: routes(&app),
+	}
+
+	err = srv.ListenAndServe()
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+
+// run configures the app config, session, and handlers
+func run() error {
 	// change this to true in prod
 	app.InProduction = false
 
@@ -36,7 +57,7 @@ func main() {
 
 	tc, err := render.CreateTemplateCache()
 	if err != nil {
-		log.Fatal("cannot create template cache")
+		return fmt.Errorf("run: failed creating template cache: %w", err)
 	}
 
 	app.TemplateCache = tc
@@ -44,18 +65,6 @@ func main() {
 
 	repo := handlers.NewRepo(&app)
 	handlers.NewHandlers(repo)
-
 	render.NewTemplates(&app)
-
-	log.Printf("starting application on port %s\n", portNumber)
-
-	srv := &http.Server{
-		Addr:    portNumber,
-		Handler: routes(&app),
-	}
-
-	err = srv.ListenAndServe()
-	if err != nil {
-		log.Fatal(err)
-	}
+	return nil
 }

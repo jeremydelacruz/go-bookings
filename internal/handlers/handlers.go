@@ -19,6 +19,8 @@ type Repository struct {
 // Repo the repository used by the handlers
 var Repo *Repository
 
+// TODO: handle returned err from render.RenderTemplate(...)
+
 // NewRepo creates a new repository
 func NewRepo(a *config.AppConfig) *Repository {
 	return &Repository{
@@ -132,7 +134,7 @@ func (m *Repository) PostReservation(w http.ResponseWriter, r *http.Request) {
 	// validations — builder?
 	form := forms.New(r.PostForm)
 	form.Required("first_name", "last_name", "email")
-	form.MinLength("first_name", 3, r)
+	form.MinLength("first_name", 3)
 	form.IsEmail("email")
 
 	if !form.Valid() {
@@ -154,7 +156,7 @@ func (m *Repository) PostReservation(w http.ResponseWriter, r *http.Request) {
 func (m *Repository) ReservationSummary(w http.ResponseWriter, r *http.Request) {
 	reservation, ok := m.App.Session.Get(r.Context(), "reservation").(models.Reservation)
 	if !ok {
-		log.Println("cannot get reservation from the session")
+		log.Println("warning: cannot get reservation from the session")
 		m.App.Session.Put(r.Context(), "error", "Can't seem to find your reservation")
 		http.Redirect(w, r, "/", http.StatusTemporaryRedirect)
 		return

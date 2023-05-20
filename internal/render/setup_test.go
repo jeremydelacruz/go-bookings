@@ -2,6 +2,7 @@ package render
 
 import (
 	"encoding/gob"
+	"log"
 	"net/http"
 	"os"
 	"testing"
@@ -31,6 +32,12 @@ func (tw *testWriter) WriteHeader(statusCode int) {}
 
 func TestMain(m *testing.M) {
 	testApp.InProduction = false
+
+	// configure loggers
+	infoLog := log.New(os.Stdout, "INFO\t", log.Ldate|log.Ltime)
+	testApp.InfoLog = infoLog
+	errorLog := log.New(os.Stdout, "ERROR\t", log.Ldate|log.Ltime|log.Lshortfile)
+	testApp.ErrorLog = errorLog
 
 	// Register this type to use in the session
 	gob.Register(models.Reservation{})

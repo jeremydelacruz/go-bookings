@@ -17,8 +17,8 @@ var app *config.AppConfig
 var pathToTemplates = "./templates"
 var functions = template.FuncMap{}
 
-// NewTemplates sets the config for the template package
-func NewTemplates(a *config.AppConfig) {
+// NewRenderer sets the config for the template package
+func NewRenderer(a *config.AppConfig) {
 	app = a
 }
 
@@ -31,7 +31,7 @@ func addDefaultData(data *models.TemplateData, r *http.Request) *models.Template
 	return data
 }
 
-func RenderTemplate(w http.ResponseWriter, r *http.Request, tmpl string, data *models.TemplateData) error {
+func Template(w http.ResponseWriter, r *http.Request, tmpl string, data *models.TemplateData) error {
 	var templateCache map[string]*template.Template
 
 	if app.UseCache {
@@ -87,19 +87,19 @@ func CreateTemplateCache() (map[string]*template.Template, error) {
 	// iterate through each page, also parsing all layouts with each page
 	for _, page := range pages {
 		name := filepath.Base(page)
-		templateSet, err := template.New(name).ParseFiles(page)
+		parsedTemplate, err := template.New(name).ParseFiles(page)
 		if err != nil {
 			return templateCache, err
 		}
 
 		if len(matches) > 0 {
-			templateSet, err = templateSet.ParseGlob(fmt.Sprintf("%s/*.layout.tmpl", pathToTemplates))
+			parsedTemplate, err = parsedTemplate.ParseGlob(fmt.Sprintf("%s/*.layout.tmpl", pathToTemplates))
 			if err != nil {
 				return templateCache, err
 			}
 		}
 
-		templateCache[name] = templateSet
+		templateCache[name] = parsedTemplate
 	}
 
 	return templateCache, nil

@@ -1,5 +1,7 @@
 # go-bookings
 
+[![Go](https://github.com/jeremydelacruz/go-bookings/actions/workflows/build.yml/badge.svg)](https://github.com/jeremydelacruz/go-bookings/actions/workflows/build.yml)
+
 bookings and reservations project
 
 - uses `go` version `1.20`
